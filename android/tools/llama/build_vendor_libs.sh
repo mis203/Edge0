@@ -52,7 +52,7 @@ cmake -S "$WT" -B "$WT/build-android-cpu" -G Ninja \
     -DCMAKE_TOOLCHAIN_FILE="$NDK/build/cmake/android.toolchain.cmake" \
     -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-28 -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=ON -DLLAMA_BUILD_COMMON=ON -DGGML_OPENCL=OFF -DGGML_NATIVE=OFF
-ninja -C "$WT/build-android-cpu" llama ggml ggml-base ggml-cpu
+ninja -j "${NINJA_JOBS:-$(nproc)}" -C "$WT/build-android-cpu" llama ggml ggml-base ggml-cpu
 
 mkdir -p "$LL/arm64-v8a" "$LL/include"
 cp "$WT"/build-android-cpu/bin/{libllama.so,libggml.so,libggml-base.so,libggml-cpu.so} "$LL/arm64-v8a/"
