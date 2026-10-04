@@ -36,6 +36,9 @@ if [ ! -d "$WT" ]; then
 fi
 
 if [ "${1:-}" = "--replay" ] || [ "$FRESH_WT" = "1" ]; then
+    # Patch replay creates local commits; keep it independent of the host's git config.
+    export GIT_COMMITTER_NAME="${GIT_COMMITTER_NAME:-Edge0 Build}"
+    export GIT_COMMITTER_EMAIL="${GIT_COMMITTER_EMAIL:-edge0-build@users.noreply.github.com}"
     git -C "$WT" am --abort 2>/dev/null || true
     git -C "$WT" reset --hard "$PIN"
     for band in common android; do
