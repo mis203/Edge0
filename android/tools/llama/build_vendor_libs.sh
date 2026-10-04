@@ -21,7 +21,7 @@ LL=$REPO/build-dl/llama-libs
 if [ ! -d "$VENDOR/.git" ]; then
     echo "[0/3] materializing vendor: clone llama.cpp at pinned $PIN -> $VENDOR"
     mkdir -p "$DEPOT/vendor"
-    git clone --filter=blob:none "${EDGE0_LLAMA_URL:-https://github.com/ggml-org/llama.cpp}" "$VENDOR"
+    git clone --filter=blob:none --no-checkout "${EDGE0_LLAMA_URL:-https://github.com/ggml-org/llama.cpp}" "$VENDOR"
 fi
 [ "$(git -C "$VENDOR" rev-parse HEAD)" = "$PIN" ] || git -C "$VENDOR" checkout --detach "$PIN"
 [ -z "$(git -C "$VENDOR" status --porcelain)" ] || { echo "ABORT: vendor tree dirty - the pristine supply is never patched in place; restore with: git -C $VENDOR checkout --detach $PIN"; exit 1; }
