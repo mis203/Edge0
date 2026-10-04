@@ -7,7 +7,7 @@
 # Usage: bash tools/llama/build_vendor_libs.sh [--replay]  (--replay = re-apply bands + verify)
 set -euo pipefail
 REPO=$(cd "$(dirname "$0")/../.." && pwd)
-DEPOT=${EDGE0_DEPOT:-$(cd "$REPO/.." && pwd -W)}   # depot root (this repo lives at <depot>/android)
+DEPOT=${EDGE0_DEPOT:-$(cd "$REPO/.." && pwd -P)}   # depot root (this repo lives at <depot>/android)
 WT=$DEPOT/wt/and
 [ -f "$DEPOT/vendor.llama.pin" ] || { echo "ABORT: vendor.llama.pin missing at depot root ($DEPOT)"; exit 1; }
 PIN=$(cut -d' ' -f1 "$DEPOT/vendor.llama.pin")
