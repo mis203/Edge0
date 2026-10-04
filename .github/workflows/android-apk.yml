@@ -52,7 +52,22 @@ jobs:
           NINJA_JOBS: "2"
         run: |
           export NDK_DIR="$ANDROID_HOME/ndk/28.2.13676358"
-          bash android/tools/llama/build_vendor_libs.sh
+          engine_log="$RUNNER_TEMP/edge0-engine-build.log"
+          if bash android/tools/llama/build_vendor_libs.sh >"$engine_log" 2>&1; then
+            cat "$engine_log"
+          else
+            status=$?
+            cat "$engine_log"
+            {
+              echo '### Native engine build failed'
+              echo '```text'
+              tail -n 80 "$engine_log"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            details=$(tail -n 30 "$engine_log" | sed -e 's/%/%25/g' -e 's/\r/%0D/g' -e ':a;N;$!ba;s/\n/%0A/g' -e 's/:/%3A/g' -e 's/,/%2C/g')
+            echo "::error title=Native engine build failed::$details"
+            exit "$status"
+          fi
 
       - name: Assemble debug APK
         working-directory: android
